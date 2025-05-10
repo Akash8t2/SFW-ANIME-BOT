@@ -1,24 +1,140 @@
-{ 
-   "name": "FZXAniAdvanced", 
-   "description": "A Telegram Bot automatically Fetch, Encode & Upload Animes Using RSS & LibTorrent", 
-   "keywords": ["telegram", "files", "stream"],
-   "success_url": "/",
-   "env": { 
-     "ENV": { 
-       "description": "Set this to True if you don't want to crash the bot", 
-       "value": "True" 
-     }
-   }, 
-   "buildpacks": [ 
-     { 
-       "url": "heroku/python" 
-     } 
-   ], 
-   "stack": "container", 
-   "formation": { 
-     "worker": { 
-       "quantity": 1,
-       "size": "standard-2x" 
-     } 
-   } 
+{
+  "name": "FZXAniAdvanced",
+  "description": "A Telegram Bot automatically Fetch, Encode & Upload Animes Using RSS & LibTorrent",
+  "keywords": ["telegram", "files", "stream"],
+  "success_url": "/",
+  "env": {
+    "API_ID": {
+      "description": "Telegram API ID from my.telegram.org",
+      "value": "",
+      "required": true
+    },
+    "API_HASH": {
+      "description": "Telegram API Hash from my.telegram.org",
+      "value": "",
+      "required": true
+    },
+    "BOT_TOKEN": {
+      "description": "Telegram Bot Token from @BotFather",
+      "value": "",
+      "required": true
+    },
+    "MONGO_URI": {
+      "description": "MongoDB connection URI",
+      "value": "",
+      "required": true
+    },
+    "FSUB_CHATS": {
+      "description": "Force sub chats (space separated chat IDs)",
+      "value": "",
+      "required": false
+    },
+    "BACKUP_CHANNEL": {
+      "description": "Backup channel ID (start with -100)",
+      "value": "-100",
+      "required": false
+    },
+    "MAIN_CHANNEL": {
+      "description": "Main channel ID (start with -100)",
+      "value": "-100",
+      "required": true
+    },
+    "LOG_CHANNEL": {
+      "description": "Log channel ID (start with -100)",
+      "value": "-100",
+      "required": false
+    },
+    "FILE_STORE": {
+      "description": "File store channel ID (start with -100)",
+      "value": "-100",
+      "required": true
+    },
+    "ADMINS": {
+      "description": "Admin user IDs (space separated)",
+      "value": "",
+      "required": true
+    },
+    "RSS_ITEMS": {
+      "description": "RSS feed URL for anime updates",
+      "value": "https://subsplease.org/rss/?r=1080"
+    },
+    "SEND_SCHEDULE": {
+      "description": "Enable schedule sending (True/False)",
+      "value": "True"
+    },
+    "BRAND_UNAME": {
+      "description": "Brand username for footer",
+      "value": "@Matiz_Tech"
+    },
+    "FFCODE_1080": {
+      "description": "FFmpeg code for 1080p encoding",
+      "value": "ffmpeg -i '{}' -progress '{}' -i https://graph.org/file/cb63ab487e1a13414d08f.png -filter_complex \"[0:v][1:v] overlay=W-w--70:H-h--70 [out]\" -map \"[out]\" -map 0:a -map 0:s -c:v libx264 -crf 26 -c:s copy -pix_fmt yuv420p -s 1920x1080 -b:v 150k -c:a libopus -b:a 35k -preset veryfast -metadata title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata author='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:s title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:a title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:v title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' '{}' -y"
+    },
+    "FFCODE_720": {
+      "description": "FFmpeg code for 720p encoding",
+      "value": "ffmpeg -i '{}' -progress '{}' -i https://graph.org/file/cb63ab487e1a13414d08f.png -filter_complex \"[0:v][1:v] overlay=W-w--70:H-h--70 [out]\" -map \"[out]\" -map 0:a -map 0:s -c:v libx264 -crf 26 -c:s copy -pix_fmt yuv420p -s 1280x720 -b:v 150k -c:a libopus -b:a 35k -preset veryfast -metadata title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata author='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:s title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:a title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:v title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' '{}' -y"
+    },
+    "FFCODE_480": {
+      "description": "FFmpeg code for 480p encoding",
+      "value": "ffmpeg -i '{}' -progress '{}' -i https://graph.org/file/cb63ab487e1a13414d08f.png -filter_complex \"[0:v][1:v] overlay=W-w--70:H-h--70 [out]\" -map \"[out]\" -map 0:a -map 0:s -c:v libx264 -crf 26 -c:s copy -pix_fmt yuv420p -s 840x480 -b:v 150k -c:a libopus -b:a 35k -preset veryfast -metadata title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata author='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:s title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:a title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:v title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' '{}' -y"
+    },
+    "FFCODE_360": {
+      "description": "FFmpeg code for 360p encoding",
+      "value": "ffmpeg -i '{}' -progress '{}' -i https://graph.org/file/cb63ab487e1a13414d08f.png -filter_complex \"[0:v][1:v] overlay=W-w--70:H-h--70 [out]\" -map \"[out]\" -map 0:a -map 0:s -c:v libx264 -crf 26 -c:s copy -pix_fmt yuv420p -s 640x360 -b:v 150k -c:a libopus -b:a 35k -preset veryfast -metadata title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata author='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:s title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:a title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' -metadata:s:v title='𝖳𝖦>@𝖬𝖺𝗍𝗂𝗓_𝖳𝖾𝖼𝗁𝗓' '{}' -y"
+    },
+    "QUALS": {
+      "description": "Supported qualities (space separated)",
+      "value": "360 480 720 1080"
+    },
+    "AS_DOC": {
+      "description": "Send files as documents (True/False)",
+      "value": "True"
+    },
+    "THUMB": {
+      "description": "Thumbnail URL",
+      "value": "https://te.legra.ph/file/621c8d40f9788a1db7753.jpg"
+    },
+    "AUTO_DEL": {
+      "description": "Enable auto delete (True/False)",
+      "value": "True"
+    },
+    "DEL_TIMER": {
+      "description": "Auto delete timer in seconds",
+      "value": "600"
+    },
+    "START_PHOTO": {
+      "description": "Start message photo URL",
+      "value": "https://telegra.ph/file/edca9dc39bd0b8e85c160.jpg"
+    },
+    "START_MSG": {
+      "description": "Start message text",
+      "value": "<b>Hey {first_name}</b>,\n\n    <i>I am Auto Animes Store & Automater Encoder Build with ❤️ !!</i>"
+    },
+    "START_BUTTONS": {
+      "description": "Start message buttons (TEXT|URL separated by space)",
+      "value": "UPDATES|https://telegram.me/Matiz_Tech SUPPORT|https://t.me/+ZFbx7IrwGIU4NjVh"
+    },
+    "UPSTREAM_REPO": {
+      "description": "Git repository for updates",
+      "value": "",
+      "required": false
+    },
+    "UPSTREAM_BRANCH": {
+      "description": "Git branch for updates",
+      "value": "main",
+      "required": false
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "stack": "container",
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "standard-2x"
+    }
+  }
 }
